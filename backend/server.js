@@ -19,7 +19,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 // Routes
 const foodRoutes = require('./routes/foodRoutes');
-app.use('/api/food', foodRoutes);
+app.use('/food', foodRoutes);
 
 // Basic route
 app.get('/', (req, res) => {
