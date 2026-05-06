@@ -15,7 +15,8 @@ function RequestFood() {
   const fetchFoodDonations = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/food`);
+      const apiBase = process.env.REACT_APP_API_URL || `${window.location.origin}/api`;
+      const response = await axios.get(`${apiBase}/food`);
       setFoodItems(response.data.data);
       setMessage({ type: '', text: '' });
     } catch (error) {
@@ -31,7 +32,8 @@ function RequestFood() {
 
   const handleClaimFood = async (id) => {
     try {
-      await axios.put(`${process.env.REACT_APP_API_URL}/food/${id}/claim`);
+      const apiBase = process.env.REACT_APP_API_URL || `${window.location.origin}/api`;
+      await axios.put(`${apiBase}/food/${id}/claim`);
       setMessage({ 
         type: 'success', 
         text: 'Food claimed successfully! Thank you.' 

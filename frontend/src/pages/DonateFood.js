@@ -37,10 +37,11 @@ function DonateFood() {
     }
 
     setLoading(true);
+    const apiBase = process.env.REACT_APP_API_URL || `${window.location.origin}/api`;
 
     try {
       await axios.post(
-        `${process.env.REACT_APP_API_URL}/food`,
+        `${apiBase}/food`,
         formData
       );
 
