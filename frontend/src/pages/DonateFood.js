@@ -24,55 +24,67 @@ function DonateFood() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setMessage({ type: '', text: '' });
+  e.preventDefault();
 
-    // Validation
-    if (!formData.foodName || !formData.quantity || !formData.location) {
-      setMessage({ 
-        type: 'error', 
-        text: 'Please fill in all required fields: Food Name, Quantity, and Location' 
-      });
-      return;
-    }
+  setMessage({ type: '', text: '' });
 
-    setLoading(true);
-    const apiBase = process.env.REACT_APP_API_URL || `${window.location.origin}/api`;
+  if (!formData.foodName || !formData.quantity || !formData.location) {
+    setMessage({
+      type: 'error',
+      text: 'Please fill in all required fields'
+    });
+    return;
+  }
 
-    try {
-      await axios.post(
-        `${apiBase}/food`,
-        formData
-      );
+  setLoading(true);
 
-      setMessage({ 
-        type: 'success', 
-        text: 'Food donation posted successfully! Thank you for your generosity.' 
-      });
+  try {
+    console.log("Sending:", formData);
 
-      // Clear form
-      setFormData({
-        foodName: '',
-        quantity: '',
-        location: '',
-        description: '',
-        donorName: '',
-        donorPhone: '',
-      });
+    const response = await axios.post(
+      "https://fooddonation-r5a5.onrender.com/food",
+      formData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-      // Redirect to home after 2 seconds
-      setTimeout(() => {
-        navigate('/');
-      }, 2000);
-    } catch (error) {
-      setMessage({ 
-        type: 'error', 
-        text: error.response?.data?.message || 'Error posting donation. Please try again.' 
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+    console.log("SUCCESS:", response.data);
+
+    setMessage({
+      type: 'success',
+      text: 'Food donation posted successfully!'
+    });
+
+    setFormData({
+      foodName: '',
+      quantity: '',
+      location: '',
+      description: '',
+      donorName: '',
+      donorPhone: '',
+    });
+
+    setTimeout(() => {
+      navigate('/');
+    }, 2000);
+
+  } catch (error) {
+    console.log("FULL ERROR:", error.response?.data);
+
+    setMessage({
+      type: 'error',
+      text:
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        'Error posting donation'
+    });
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleCancel = () => {
     navigate('/');
